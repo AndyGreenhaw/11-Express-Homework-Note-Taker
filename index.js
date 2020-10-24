@@ -12,6 +12,10 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // GET route for All
+app.get("/", function(req,res){
+  res.json(path.join(__dirname, "./public/notes.html"))
+});
+
 app.get("/notes", function(req,res){
   res.json(path.join(__dirname, "./public/notes.html"))
 });
