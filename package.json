@@ -1,7 +1,6 @@
 {
   "name": "note-taker",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +10,14 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4"
-  }
-  
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndyGreenhaw/11-Express-Homework-Note-Taker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AndyGreenhaw/11-Express-Homework-Note-Taker/issues"
+  },
+  "homepage": "https://github.com/AndyGreenhaw/11-Express-Homework-Note-Taker#readme",
+  "description": ""
 }
