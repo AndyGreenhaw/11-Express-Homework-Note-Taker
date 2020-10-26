@@ -1,6 +1,12 @@
+//////////
+//SETUP //
+//////////
+
 // Dependencies
 const express = require("express");
 const path = require("path");
+const fs = require("fs")
+const dbNotes = require("./db/db.json")
 
 // Sets Up Express App
 var app = express();
@@ -13,37 +19,51 @@ app.use(express.json());
 // Tells Express It Can Serve Files from the Public Folder
 app.use(express.static('public'));
 
-// GET route Listed in Heroku Guide
-// app.get("/", function(req,res){
-//   res.json(path.join(__dirname, "public/index.html"))
-// });
+////////////////////
+// ROUTE REQUESTS //
+////////////////////
 
-// Sends Index and Notes HTML to Browser
+// GET: Retrieves HTML Pages to Display Main Page and Notes Page
 app.get("/", function(req,res){
   res.sendFile(path.join(__dirname, "/public/index.html"))
 });
+
 app.get("/notes", function(req,res){
   res.sendFile(path.join(__dirname, "/public/notes.html"))
 });
 
-// GET route for API Notes
-// app.get("/api/notes", function(req,res){
-//   const id = req.params.id; // req.params stores all wildcards and values
-// });
+// GET: Retrieves Note Data from DB JSON Object
+app.get("/api/notes", function(req,res){
 
-// POST route for API Notes
-// app.post("/api/notes", function(req,res){
-//   const dataToAdd = req.body; // req.body stores the content of any submitted form
-// });
+  // Read DB JSON file, Parse the Data in an Object and Send it Back
+  fs.readFile(path.join(__dirname, "", "./db/db.json"), (err, data) => {
+    if (err) throw err;
+    const notes = JSON.parse(data) 
+    res.send(notes)
+    console.log(notes);
+  });
 
-// Sample PUT route to update existing item
-// app.put("/item", function(req,res){
-// });
+});
 
-// DELETE ROUTE that deletes existing item
-// app.delete("/api/notes/:id", function(req,res){
-//   console.log(req.params.id)
-// });
+// POST - When Save Button Clicked, Write New Note to DB JSON File 
+app.post("/api/notes", function (req, res) {
+
+  // Read DB JSON File,  Parse Data Into Object and Push it to DB JSON File
+  fs.readFile(path.join(__dirname, "./db/db.json"), function (err, data) {
+      if (err) throw err;
+      const noteObject = JSON.parse(data);
+      const note = req.body;
+      noteObject.push(note);
+
+      // Turn the new note into a string object and write it to the JSON file. 
+      const newNote = JSON.stringify(noteObject);
+      fs.writeFile(path.join(__dirname, "./db/db.json"), newNote, function (err) {
+          if (err) throw err;
+      })
+      res.json(req.body)
+  })
+})
+
 
 // Listener
 app.listen(PORT, function() {
