@@ -40,20 +40,25 @@ app.get("/api/notes", function(req,res){
     if (err) throw err;
     const notes = JSON.parse(data) 
     res.send(notes)
-    console.log(notes);
+    res.end()  
   });
-
 });
 
-// POST - When Save Button Clicked, Write New Note to DB JSON File 
+// POST - Write New Note to DB JSON File When User Clicks Save
 app.post("/api/notes", function (req, res) {
 
-  // Read DB JSON File,  Parse Data Into Object and Push it to DB JSON File
+  // Read DB JSON File,  Parse Data Into Object, and Push it to DB JSON File
   fs.readFile(path.join(__dirname, "./db/db.json"), function (err, data) {
       if (err) throw err;
       const noteObject = JSON.parse(data);
       const note = req.body;
       noteObject.push(note);
+
+      // Add ID's to All Notes
+      for(var i=0; i<noteObject.length; i++){
+      note.id = i
+      console.log(note.id)
+      }
 
       // Turn the new note into a string object and write it to the JSON file. 
       const newNote = JSON.stringify(noteObject);
@@ -61,8 +66,11 @@ app.post("/api/notes", function (req, res) {
           if (err) throw err;
       })
       res.json(req.body)
+      res.end()  
   })
 })
+
+// POST - Write New Note to DB JSON File When User Clicks Save
 
 
 // Listener
