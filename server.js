@@ -32,29 +32,35 @@ app.get("/notes", function(req,res){
   res.sendFile(path.join(__dirname, "/public/notes.html"))
 });
 
+///////////////////////////////////////////////
 // GET: Retrieves Note Data from DB JSON Object
+///////////////////////////////////////////////
 app.get("/api/notes", function(req,res){
 
-  // Read DB JSON file, Parse the Data in an Object and Send it Back
+  // Read DB JSON file, Parse Data in an Object, and Send it Back
   fs.readFile(path.join(__dirname, "", "./db/db.json"), (err, data) => {
     if (err) throw err;
-    const notes = JSON.parse(data) 
+    const notes = JSON.parse(data)
+
     res.send(notes)
     res.end()  
   });
 });
 
-// POST - Write New Note to DB JSON File When User Clicks Save
+/////////////////////////////////////////////////////////////////
+// POST - Write New Note to DB JSON File When User Clicks Save //
+/////////////////////////////////////////////////////////////////
+
 app.post("/api/notes", function (req, res) {
 
-  // Read DB JSON File,  Parse Data Into Object, and Push it to DB JSON File
+  // Read DB JSON File, Parse Data Into Object, and Push it to DB JSON File
   fs.readFile(path.join(__dirname, "./db/db.json"), function (err, data) {
       if (err) throw err;
       const noteObject = JSON.parse(data);
       const note = req.body;
       noteObject.push(note);
 
-      // Add ID's to All Notes
+      // Add ID's to All (New) Notes
       for(var i=0; i<noteObject.length; i++){
       note.id = i
       console.log(note.id)
@@ -62,7 +68,7 @@ app.post("/api/notes", function (req, res) {
 
       // Turn the new note into a string object and write it to the JSON file. 
       const newNote = JSON.stringify(noteObject);
-      fs.writeFile(path.join(__dirname, "./db/db.json"), newNote, function (err) {
+      fs.writeFile(path.join(__dirname, "./db/db.json"), newNote, function (err, data) {
           if (err) throw err;
       })
       res.json(req.body)
@@ -70,10 +76,31 @@ app.post("/api/notes", function (req, res) {
   })
 })
 
-// POST - Write New Note to DB JSON File When User Clicks Save
+/////////////////////////////////////////////////
+// DELETE - Remove Note User Selects to Delete //
+/////////////////////////////////////////////////
+
+app.delete("/api/notes/:id", function (req, res) {
+
+  // Grab ID of Note to Delete
+  const noteToBeDeleted = req.params.id;
+
+  // Read DB JSON File, Filter Remaining Notes, and Write Remaining Notes to DJ JSON File
+  fs.readFile(path.join(__dirname, "", "./db/db.json"), function (err, data) {
+    if(err) throw err;
+    const notes = JSON.parse(data)
+    const unTouchedNotes = notes.filter((noteObject => noteObject.id !== noteToBeDeleted))
+
+    fs.writeFile("./db/db.json",JSON.stringify(unTouchedNotes), function (err){
+      if(err) throw(err)
+    })
+      res.json(notes)
+      res.end()
+  })
+})
 
 
 // Listener
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
-});
+})
