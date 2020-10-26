@@ -19,11 +19,9 @@ app.get("/", function(req,res){
 app.get("/", function(req,res){
   res.sendFile(path.join(__dirname, "index.html"))
 });
-
 app.get("/notes", function(req,res){
-  res.sendFile(path.join(__dirname, "public/notes.html"))
+  res.sendFile(path.join(__dirname, "notes.html"))
 });
-
 
 // GET route for API Notes
 // app.get("/api/notes", function(req,res){
@@ -40,9 +38,9 @@ app.get("/notes", function(req,res){
 // });
 
 // DELETE ROUTE that deletes existing item
-app.delete("/api/notes/:id", function(req,res){
-  console.log(req.params.id)
-});
+// app.delete("/api/notes/:id", function(req,res){
+//   console.log(req.params.id)
+// });
 
 // Listener
 app.listen(PORT, function() {
