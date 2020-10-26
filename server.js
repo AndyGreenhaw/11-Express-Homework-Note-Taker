@@ -1,5 +1,8 @@
-var express = require("express");
-var noteObjectArray = require("./db/db.json")
+// Dependencies
+const express = require("express");
+const path = require("path");
+
+// Sets Up Express App
 var app = express();
 var PORT = process.env.PORT || 3001;
 
@@ -11,16 +14,16 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // GET route Listed in Heroku Guide
-app.get("/", function(req,res){
-  res.json(path.join(__dirname, "public/index.html"))
-});
+// app.get("/", function(req,res){
+//   res.json(path.join(__dirname, "public/index.html"))
+// });
 
 // Sends Index and Notes HTML to Browser
 app.get("/", function(req,res){
-  res.sendFile(path.join(__dirname, "index.html"))
+  res.sendFile(path.join(__dirname, "/public/index.html"))
 });
 app.get("/notes", function(req,res){
-  res.sendFile(path.join(__dirname, "notes.html"))
+  res.sendFile(path.join(__dirname, "/public/notes.html"))
 });
 
 // GET route for API Notes
