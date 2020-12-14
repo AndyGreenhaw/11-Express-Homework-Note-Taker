@@ -6,11 +6,11 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs")
-const dbNotes = require("./db/db.json")
+// const dbNotes = require("./db/db.json")
 
 // Sets Up Express App
 var app = express();
-var PORT = process.env.PORT || 3001;
+var PORT = process.env.PORT || 3010;
 
 // Sets Up Express App to Handle Data PArsing
 app.use(express.urlencoded({extended: true}));
@@ -83,13 +83,17 @@ app.post("/api/notes", function (req, res) {
 app.delete("/api/notes/:id", function (req, res) {
 
   // Grab ID of Note to Delete
-  const noteToBeDeleted = req.params.id;
+  const deleteNote = req.params.id;
+  console.log(deleteNote);
+  console.log("read")
 
   // Read DB JSON File, Filter Remaining Notes, and Write Remaining Notes to DJ JSON File
   fs.readFile(path.join(__dirname, "", "./db/db.json"), function (err, data) {
     if(err) throw err;
     const notes = JSON.parse(data)
-    const unTouchedNotes = notes.filter((noteObject => noteObject.id !== noteToBeDeleted))
+    //console.log(notes)
+    const unTouchedNotes = notes.filter(noteObject => noteObject.id !== parseInt(deleteNote))
+    console.log(unTouchedNotes);
 
     fs.writeFile("./db/db.json",JSON.stringify(unTouchedNotes), function (err){
       if(err) throw(err)
